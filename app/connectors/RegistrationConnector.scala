@@ -147,7 +147,7 @@ class RegistrationConnector @Inject()(
       case OK =>
         Json.parse(response.body).validate[RegisterWithIdResponse] match {
           case JsSuccess(value, _) => Right(value)
-          case JsError(errors) => throw JsResultException(errors)
+          case JsError(errors) => Left(new InternalServerException(s"Invalid response JSON from DES: ${JsError.toJson(errors)}"))
         }
       case _ =>
         Left(handleErrorResponse("POST", url)(response))
@@ -159,7 +159,7 @@ class RegistrationConnector @Inject()(
       case OK =>
         Json.parse(response.body).validate[RegisterWithoutIdResponse] match {
           case JsSuccess(value, _) => Right(value)
-          case JsError(errors) => throw JsResultException(errors)
+          case JsError(errors) => Left(new InternalServerException(s"Invalid response JSON from DES: ${JsError.toJson(errors)}"))
         }
       case _ =>
         Left(handleErrorResponse("POST", url)(response))

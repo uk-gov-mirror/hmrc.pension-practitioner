@@ -57,6 +57,10 @@ class AddressReadsSpec extends AnyWordSpec with Matchers with OptionValues {
           result.countryCode `mustBe` ukAddressSample.countryCode
         }
 
+        "fail to parse when postalCode is missing" in {
+          val noPostcode = Json.obj("addressLine1" -> JsString("line1"), "countryCode" -> JsString("GB"))
+          noPostcode.validate[Address] `mustBe` a[JsError]
+        }
       }
 
       "we have a non UK address" when {
